@@ -11,19 +11,22 @@ test("filters transactions by search term and sorts by category", async () => {
 
   render(<App />);
 
-  // Test Search
+  // Wait for initial load
+  await screen.findByText("Apple");
+
+  // Test Search functionality
   const searchInput = screen.getByPlaceholderText("Search your Recent Transactions");
   fireEvent.change(searchInput, { target: { value: "Apple" } });
   
   expect(screen.queryByText("Banana")).not.toBeInTheDocument();
   expect(screen.getByText("Apple")).toBeInTheDocument();
 
-  // Reset search and test Sort
+  // Test Sorting functionality
   fireEvent.change(searchInput, { target: { value: "" } });
   const sortSelect = screen.getByRole("combobox");
   fireEvent.change(sortSelect, { target: { value: "category" } });
 
-  const rows = await screen.findAllByRole("row");
+  const rows = screen.getAllByRole("row");
   // Banana (A-Fruit) should now appear before Apple (Z-Food)
   expect(rows[1]).toHaveTextContent("Banana");
   expect(rows[2]).toHaveTextContent("Apple");
