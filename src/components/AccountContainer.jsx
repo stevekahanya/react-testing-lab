@@ -7,7 +7,7 @@ import Sort from "./Sort";
 function AccountContainer() {
   const [transactions, setTransactions] = useState([]);
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("description"); // New state for sorting
+  const [sortBy, setSortBy] = useState("description"); // New state to track sorting
 
   useEffect(() => {
     fetch("http://localhost:6001/transactions")
@@ -18,23 +18,26 @@ function AccountContainer() {
   function postTransaction(newTransaction) {
     fetch("http://localhost:6001/transactions", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(newTransaction),
     })
       .then((r) => r.json())
       .then((data) => setTransactions([...transactions, data]));
   }
 
+  // Update sorting state
   function onSort(value) {
     setSortBy(value);
   }
 
-  // Logic to filter transactions by the search term
+  // 1. Filter transactions based on the search state
   const filteredTransactions = transactions.filter((transaction) =>
     transaction.description.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Logic to sort the filtered results
+  // 2. Sort the filtered results based on the sortBy state
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
     if (sortBy === "description") {
       return a.description.localeCompare(b.description);
@@ -49,6 +52,7 @@ function AccountContainer() {
       <Search setSearch={setSearch} />
       <AddTransactionForm postTransaction={postTransaction} />
       <Sort onSort={onSort} />
+      {/* Pass the processed transactions to the list */}
       <TransactionsList transactions={sortedTransactions} />
     </div>
   );
