@@ -7,7 +7,7 @@ import Sort from "./Sort";
 function AccountContainer() {
   const [transactions, setTransactions] = useState([]);
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("description"); // State for sorting
+  const [sortBy, setSortBy] = useState("description"); // New state for sorting
 
   useEffect(() => {
     fetch("http://localhost:6001/transactions")
@@ -18,26 +18,23 @@ function AccountContainer() {
   function postTransaction(newTransaction) {
     fetch("http://localhost:6001/transactions", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newTransaction),
     })
       .then((r) => r.json())
       .then((data) => setTransactions([...transactions, data]));
   }
 
-  // Handle sort changes
   function onSort(value) {
     setSortBy(value);
   }
 
-  // Filter transactions based on the search input
+  // Logic to filter transactions by the search term
   const filteredTransactions = transactions.filter((transaction) =>
     transaction.description.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Sort the filtered transactions
+  // Logic to sort the filtered results
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
     if (sortBy === "description") {
       return a.description.localeCompare(b.description);
