@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 function AddTransactionForm({ postTransaction }) {
-  // Use state to track input values reliably
+  // Use local state to manage form inputs
   const [formData, setFormData] = useState({
     date: "",
     description: "",
@@ -18,7 +18,7 @@ function AddTransactionForm({ postTransaction }) {
 
   function submitForm(e) {
     e.preventDefault();
-    // Pass the formData state to the post function
+    // Pass the state object to the post handler
     postTransaction(formData);
     // Reset form after submission
     setFormData({ date: "", description: "", category: "", amount: "" });

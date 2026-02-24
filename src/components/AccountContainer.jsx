@@ -7,7 +7,7 @@ import Sort from "./Sort";
 function AccountContainer() {
   const [transactions, setTransactions] = useState([]);
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("description"); // New state to track sorting
+  const [sortBy, setSortBy] = useState("description"); // Track the sort criteria
 
   useEffect(() => {
     fetch("http://localhost:6001/transactions")
@@ -27,17 +27,17 @@ function AccountContainer() {
       .then((data) => setTransactions([...transactions, data]));
   }
 
-  // Update sorting state
+  // Handle the sort change from the Sort component
   function onSort(value) {
     setSortBy(value);
   }
 
-  // 1. Filter transactions based on the search state
+  // Filter transactions based on the search state updated by the Search component
   const filteredTransactions = transactions.filter((transaction) =>
     transaction.description.toLowerCase().includes(search.toLowerCase())
   );
 
-  // 2. Sort the filtered results based on the sortBy state
+  // Sort the filtered transactions based on the sortBy state
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
     if (sortBy === "description") {
       return a.description.localeCompare(b.description);
@@ -52,7 +52,7 @@ function AccountContainer() {
       <Search setSearch={setSearch} />
       <AddTransactionForm postTransaction={postTransaction} />
       <Sort onSort={onSort} />
-      {/* Pass the processed transactions to the list */}
+      {/* Pass the processed transactions to the list component */}
       <TransactionsList transactions={sortedTransactions} />
     </div>
   );
